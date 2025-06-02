@@ -18,19 +18,19 @@ jobs:
       postgres:
         image: postgres:${{ vars.GOOSE_POSTGRES_VERSION || 16 }}
         env:
-          POSTGRES_USER: ${{ vars.GOOSE_DB_USERNAME || 'govnet' }}
-          POSTGRES_PASSWORD: ${{ vars.GOOSE_DB_PASSWORD || 'govnet' }}
-          POSTGRES_DB: ${{ vars.GOOSE_DB_NAME || 'govnet' }}
+          POSTGRES_USER: ${{ vars.GOOSE_DB_USERNAME || 'kod2ulz' }}
+          POSTGRES_PASSWORD: ${{ vars.GOOSE_DB_PASSWORD || 'kod2ulzpass' }}
+          POSTGRES_DB: ${{ vars.GOOSE_DB_NAME || 'kod2ulz' }}
         ports:
           - ${{ vars.GOOSE_DB_PORT || 5432 }}:5432
     env:
-      GOVNET_DB_HOST: ${{ vars.GOOSE_DB_HOST || '127.0.0.1' }}
-      GOVNET_DB_DRIVER: ${{ vars.GOOSE_DB_DRIVER || 'postgres' }}
-      GOVNET_DB_DATABASE: ${{ vars.GOOSE_DB_NAME || 'govnet' }}
-      GOVNET_DB_USERNAME: ${{ vars.GOOSE_DB_USERNAME || 'govnet' }}
-      GOVNET_DB_PASSWORD: ${{ vars.GOOSE_DB_PASSWORD || 'govnet' }}
-      GOVNET_DB_PORT: ${{ vars.GOOSE_DB_PORT || 5432 }}
-      PGPASSWORD: ${{ vars.GOOSE_DB_PASSWORD || 'govnet' }}
+      DB_HOST: ${{ vars.GOOSE_DB_HOST || '127.0.0.1' }}
+      DB_DRIVER: ${{ vars.GOOSE_DB_DRIVER || 'postgres' }}
+      DB_DATABASE: ${{ vars.GOOSE_DB_NAME || 'kod2ulz' }}
+      DB_USERNAME: ${{ vars.GOOSE_DB_USERNAME || 'kod2ulz' }}
+      DB_PASSWORD: ${{ vars.GOOSE_DB_PASSWORD || 'kod2ulzpass' }}
+      DB_PORT: ${{ vars.GOOSE_DB_PORT || 5432 }}
+      PGPASSWORD: ${{ vars.GOOSE_DB_PASSWORD || 'kod2ulzpass' }}
       GO_CACHE_KEY: go-home-goose-${{ vars.GO_VERSION || 1.22 }}
       GO_CACHE_DIR: /home/runner/go/
     steps:
@@ -70,7 +70,7 @@ jobs:
           path: ${{ env.GO_CACHE_DIR }}
       - name: Install Postgres Extensions
         run: |
-          echo 'create extension if not exists "uuid-ossp"' | psql -h ${{ env.GOVNET_DB_HOST }} -U ${{ env.GOVNET_DB_USERNAME }} -d ${{ env.GOVNET_DB_DATABASE }}
-          echo 'create extension if not exists "moddatetime"' | psql -h ${{ env.GOVNET_DB_HOST }} -U ${{ env.GOVNET_DB_USERNAME }} -d ${{ env.GOVNET_DB_DATABASE }}
+          echo 'create extension if not exists "uuid-ossp"' | psql -h ${{ env.DB_HOST }} -U ${{ env.DB_USERNAME }} -d ${{ env.DB_DATABASE }}
+          echo 'create extension if not exists "moddatetime"' | psql -h ${{ env.DB_HOST }} -U ${{ env.DB_USERNAME }} -d ${{ env.DB_DATABASE }}
       - run: make migrate-up
       - run: make migrate-reset
